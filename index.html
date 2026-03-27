@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❄️ Quizz-Collège</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Fond animé CSS pur (flocons + étoiles) -->
+    <div class="bg-layer"></div>
+    <div class="snow-layer" id="snowLayer"></div>
+
+    <!-- Page d'accueil -->
+    <div class="page" id="homePage">
+        <header class="header">
+            <h1 class="title">❄️ Quizz-Collège</h1>
+            <div class="header-right">
+                <button class="music-btn" id="musicToggle" title="Musique">🔇</button>
+                <button class="login-btn" id="loginBtn">Se connecter en prof</button>
+            </div>
+        </header>
+        <main class="main-content">
+            <div class="welcome-section">
+                <h2>Choisissez votre classe</h2>
+                <div class="classes-grid">
+                    <div class="class-card" data-class="6eme"><h3>6ème</h3><p>Classe de sixième</p></div>
+                    <div class="class-card" data-class="5eme"><h3>5ème</h3><p>Classe de cinquième</p></div>
+                    <div class="class-card" data-class="4eme"><h3>4ème</h3><p>Classe de quatrième</p></div>
+                    <div class="class-card" data-class="3eme"><h3>3ème</h3><p>Classe de troisième</p></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Page des matières -->
+    <div class="page" id="subjectsPage" style="display:none;">
+        <header class="header">
+            <button class="back-btn" id="backToHomeBtn">← Retour</button>
+            <h1 class="title">Classe <span id="currentClassLabel"></span></h1>
+            <div class="header-right">
+                <button class="music-btn" id="musicToggle2" title="Musique">🔇</button>
+                <button class="login-btn" id="loginBtn2">Se connecter en prof</button>
+            </div>
+        </header>
+        <main class="main-content">
+            <div class="welcome-section">
+                <h2>Choisissez une matière</h2>
+                <div class="subjects-grid" id="subjectsGrid"></div>
+                <p id="noSubjectsMsg" style="display:none; color:rgba(255,255,255,0.7); margin-top:30px; font-size:16px; text-align:center;">
+                    Aucune matière disponible pour cette classe.<br>
+                    <span style="opacity:0.6;">Un professeur doit en créer une.</span>
+                </p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Page Quiz / Fiches d'une matière -->
+    <div class="page" id="subjectPage" style="display:none;">
+        <header class="header">
+            <button class="back-btn" id="backToSubjectsBtn">← Retour</button>
+            <h1 class="title"><span id="currentSubjectLabel"></span> – <span id="currentClassLabel2"></span></h1>
+            <div class="header-right">
+                <button class="music-btn" id="musicToggle3" title="Musique">🔇</button>
+                <button class="login-btn" id="loginBtn3">Se connecter en prof</button>
+            </div>
+        </header>
+        <main class="main-content">
+            <div class="content-grid">
+                <div class="content-card" data-type="quiz">
+                    <h3>🎯 Quiz</h3>
+                    <p>Testez vos connaissances</p>
+                    <button class="continue-btn">Continuer →</button>
+                </div>
+                <div class="content-card" data-type="revision">
+                    <h3>📚 Fiches de révision</h3>
+                    <p>Ressources pédagogiques</p>
+                    <button class="continue-btn">Continuer →</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Page des quiz -->
+    <div class="page" id="quizzesPage" style="display:none;">
+        <header class="header">
+            <button class="back-btn" id="backToSubjectBtn">← Retour</button>
+            <h1 class="title">Quiz – <span id="quizPageSubjectLabel"></span></h1>
+            <div class="header-right">
+                <button class="music-btn" id="musicToggle4" title="Musique">🔇</button>
+                <button class="login-btn" id="loginBtn4">Se connecter en prof</button>
+            </div>
+        </header>
+        <main class="main-content">
+            <h2 class="category-title">📖 Quiz disponibles</h2>
+            <div class="quizzes-container" id="quizzesContainer"></div>
+        </main>
+    </div>
+
+    <!-- Page des fiches -->
+    <div class="page" id="revisionPage" style="display:none;">
+        <header class="header">
+            <button class="back-btn" id="backToSubjectBtn2">← Retour</button>
+            <h1 class="title">Fiches – <span id="revisionPageSubjectLabel"></span></h1>
+            <div class="header-right">
+                <button class="music-btn" id="musicToggle5" title="Musique">🔇</button>
+                <button class="login-btn" id="loginBtn5">Se connecter en prof</button>
+            </div>
+        </header>
+        <main class="main-content">
+            <h2 class="category-title">📚 Fiches de révision</h2>
+            <div class="revision-container" id="revisionContainer"></div>
+        </main>
+    </div>
+
+    <!-- Boutons flottants prof -->
+    <button class="float-btn create-subject-btn" id="createSubjectBtn" style="display:none;" title="Créer une matière">📝</button>
+    <button class="float-btn create-quiz-btn"    id="createQuizBtn"    style="display:none;" title="Créer un quiz">+</button>
+    <button class="float-btn create-revision-btn" id="createRevisionBtn" style="display:none;" title="Créer une fiche">📄</button>
+    <button class="float-btn manage-passwords-btn" id="managePasswordsBtn" style="display:none;" title="Mots de passe">🔑</button>
+
+    <!-- Indicateur de chargement -->
+    <div id="loadingOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; flex-direction:column; gap:16px;">
+        <div class="spinner"></div>
+        <p style="color:white; font-size:16px;" id="loadingMsg">Chargement…</p>
+    </div>
+
+    <!-- ===== MODALS ===== -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close" id="closeLoginModal">&times;</span>
+            <h2>Connexion Professeur</h2>
+            <div class="form-group"><label>Mot de passe :</label><input type="password" id="password"></div>
+            <button class="btn-submit" id="loginSubmitBtn">Connexion</button>
+            <p class="error-message" id="loginError"></p>
+        </div>
+    </div>
+
+    <div class="modal" id="managePasswordsModal">
+        <div class="modal-content">
+            <span class="close" id="closeManagePasswordsModal">&times;</span>
+            <h2>Gérer les mots de passe</h2>
+            <div id="passwordsList"></div>
+            <div class="form-group" style="margin-top:15px;"><label>Nouveau mot de passe :</label><input type="password" id="newPassword"></div>
+            <button class="btn-submit" id="addPasswordBtn">Ajouter</button>
+        </div>
+    </div>
+
+    <div class="modal" id="createSubjectModal">
+        <div class="modal-content">
+            <span class="close" id="closeCreateSubjectModal">&times;</span>
+            <h2>Créer une matière</h2>
+            <div class="form-group"><label>Classe :</label>
+                <select id="newSubjectClass">
+                    <option value="">Choisir une classe</option>
+                    <option value="6eme">6ème</option><option value="5eme">5ème</option>
+                    <option value="4eme">4ème</option><option value="3eme">3ème</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Nom de la matière :</label>
+                <input type="text" id="newSubjectName" placeholder="ex: Histoire, Maths, Anglais…" maxlength="50">
+            </div>
+            <button class="btn-submit" id="saveSubjectBtn">Créer la matière</button>
+        </div>
+    </div>
+
+    <div class="modal" id="deleteSubjectModal">
+        <div class="modal-content">
+            <h2>Supprimer la matière</h2>
+            <p id="deleteSubjectMsg" style="margin-bottom:10px; color:#555;"></p>
+            <div class="modal-buttons">
+                <button class="btn-delete" id="confirmDeleteSubjectBtn">Oui, supprimer</button>
+                <button class="btn-cancel" id="cancelDeleteSubjectBtn">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="quizCreationModal">
+        <div class="modal-content quiz-creation-content">
+            <span class="close" id="closeQuizCreationModal">&times;</span>
+            <h2>Créer un Quiz</h2>
+            <div class="form-group"><label>Classe :</label>
+                <select id="quizClass">
+                    <option value="">Choisir une classe</option>
+                    <option value="6eme">6ème</option><option value="5eme">5ème</option>
+                    <option value="4eme">4ème</option><option value="3eme">3ème</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Matière :</label><select id="quizSubject"><option value="">Choisir une matière</option></select></div>
+            <div class="questions-container" id="questionsContainer"></div>
+            <button class="btn-add-question" id="addQuestionBtn">+ Ajouter une question</button>
+            <div class="quiz-creation-buttons">
+                <button class="btn-submit" id="finishQuizBtn">Terminer et nommer</button>
+                <button class="btn-cancel" id="cancelQuizBtn">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="quizNameModal">
+        <div class="modal-content">
+            <span class="close" id="closeQuizNameModal">&times;</span>
+            <h2>Nom du Quiz</h2>
+            <div class="form-group"><label>Nom :</label><input type="text" id="quizName" maxlength="50"></div>
+            <button class="btn-submit" id="saveQuizNameBtn">Créer le quiz</button>
+        </div>
+    </div>
+
+    <div class="modal" id="revisionCreationModal">
+        <div class="modal-content">
+            <span class="close" id="closeRevisionCreationModal">&times;</span>
+            <h2>Créer une fiche de révision</h2>
+            <div class="form-group"><label>Classe :</label>
+                <select id="revisionClass">
+                    <option value="">Choisir une classe</option>
+                    <option value="6eme">6ème</option><option value="5eme">5ème</option>
+                    <option value="4eme">4ème</option><option value="3eme">3ème</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Matière :</label><select id="revisionSubject"><option value="">Choisir une matière</option></select></div>
+            <div class="form-group"><label>Titre :</label><input type="text" id="revisionTitle" maxlength="100"></div>
+            <div class="form-group"><label>Fichier :</label><input type="file" id="revisionFile" accept="image/*,.pdf,.doc,.docx,.txt"></div>
+            <button class="btn-submit" id="saveRevisionBtn">Créer la fiche</button>
+        </div>
+    </div>
+
+    <div class="modal" id="deleteQuizModal">
+        <div class="modal-content">
+            <h2>Confirmer la suppression</h2>
+            <p>Êtes-vous sûr de vouloir supprimer ce quiz ?</p>
+            <div class="modal-buttons">
+                <button class="btn-delete" id="confirmDeleteBtn">Oui, supprimer</button>
+                <button class="btn-cancel" id="cancelDeleteBtn">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="playQuizModal">
+        <div class="modal-content quiz-play-content">
+            <span class="close" id="closePlayQuizModal">&times;</span>
+            <h2 id="quizTitle"></h2>
+            <div class="quiz-progress">
+                <p id="questionCount"></p>
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            </div>
+            <div id="questionContainer"></div>
+            <button class="btn-next" id="nextBtn">Suivant</button>
+        </div>
+    </div>
+
+    <div class="modal" id="resultsModal">
+        <div class="modal-content">
+            <span class="close" id="closeResultsModal">&times;</span>
+            <h2>Résultats</h2>
+            <div class="results-content">
+                <p class="score" id="scoreText"></p>
+                <button class="btn-submit" id="retryBtn">Retour à l'accueil</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="snow.js"></script>
+    <script src="script.js"></script>
+    <script src="music.js"></script>
+</body>
+</html>

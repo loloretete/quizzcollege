@@ -1,0 +1,555 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ========================
+   FOND ANIMÉ CSS PUR
+   (fonctionne sur Cloudflare Pages, pas de canvas)
+   ======================== */
+.bg-layer {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background: linear-gradient(160deg,
+        #060b1f 0%,
+        #0e1535 30%,
+        #132244 60%,
+        #0a1628 100%
+    );
+    /* Étoiles CSS */
+    background-image:
+        radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.7) 0%, transparent 100%),
+        radial-gradient(1px 1px at 25% 8%,  rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 42% 22%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 58% 5%,  rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 70% 18%, rgba(255,255,255,0.7) 0%, transparent 100%),
+        radial-gradient(2px 2px at 85% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 92% 28%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 15% 45%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 35% 55%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 55% 40%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 75% 60%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 50%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(2px 2px at 5%  70%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 48% 75%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 82% 80%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        linear-gradient(160deg, #060b1f 0%, #0e1535 30%, #132244 60%, #0a1628 100%);
+}
+
+/* Couche neige CSS */
+.snow-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.snowflake {
+    position: absolute;
+    top: -10px;
+    border-radius: 50%;
+    background: rgba(210, 235, 255, 0.9);
+    box-shadow: 0 0 6px rgba(180, 220, 255, 0.7);
+}
+
+/* 10 variantes de chute pour éviter les custom properties dans keyframes */
+@keyframes sf0  { 0%{transform:translateY(-10px) translateX(0);   opacity:0} 8%{opacity:1} 92%{opacity:0.7} 100%{transform:translateY(101vh) translateX(40px);  opacity:0} }
+@keyframes sf1  { 0%{transform:translateY(-10px) translateX(0);   opacity:0} 8%{opacity:1} 92%{opacity:0.7} 100%{transform:translateY(101vh) translateX(-55px); opacity:0} }
+@keyframes sf2  { 0%{transform:translateY(-10px) translateX(0);   opacity:0} 8%{opacity:1} 92%{opacity:0.7} 100%{transform:translateY(101vh) translateX(70px);  opacity:0} }
+@keyframes sf3  { 0%{transform:translateY(-10px) translateX(0);   opacity:0} 8%{opacity:1} 92%{opacity:0.7} 100%{transform:translateY(101vh) translateX(-30px); opacity:0} }
+@keyframes sf4  { 0%{transform:translateY(-10px) translateX(0);   opacity:0} 8%{opacity:1} 92%{opacity:0.7} 100%{transform:translateY(101vh) translateX(90px);  opacity:0} }
+@keyframes sf5  { 0%{transform:translateY(-10px) translateX(0);   opacity:0} 8%{opacity:1} 92%{opacity:0.7} 100%{transform:translateY(101vh) translateX(-80px); opacity:0} }
+@keyframes sf6  { 0%{transform:translateY(-10px) translateX(0);   opacity:0} 8%{opacity:1} 92%{opacity:0.7} 100%{transform:translateY(101vh) translateX(20px);  opacity:0} }
+@keyframes sf7  { 0%{transform:translateY(-10px) translateX(0);   opacity:0} 8%{opacity:1} 92%{opacity:0.7} 100%{transform:translateY(101vh) translateX(-60px); opacity:0} }
+@keyframes sf8  { 0%{transform:translateY(-10px) translateX(0);   opacity:0} 8%{opacity:1} 92%{opacity:0.7} 100%{transform:translateY(101vh) translateX(50px);  opacity:0} }
+@keyframes sf9  { 0%{transform:translateY(-10px) translateX(0);   opacity:0} 8%{opacity:1} 92%{opacity:0.7} 100%{transform:translateY(101vh) translateX(-40px); opacity:0} }
+
+.sf0  { animation: sf0  linear infinite; }
+.sf1  { animation: sf1  linear infinite; }
+.sf2  { animation: sf2  linear infinite; }
+.sf3  { animation: sf3  linear infinite; }
+.sf4  { animation: sf4  linear infinite; }
+.sf5  { animation: sf5  linear infinite; }
+.sf6  { animation: sf6  linear infinite; }
+.sf7  { animation: sf7  linear infinite; }
+.sf8  { animation: sf8  linear infinite; }
+.sf9  { animation: sf9  linear infinite; }
+
+/* ========================
+   SPINNER
+   ======================== */
+.spinner {
+    width: 48px; height: 48px;
+    border: 4px solid rgba(255,255,255,0.2);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ========================
+   HEADER
+   ======================== */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 32px;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    gap: 12px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.title {
+    color: white;
+    font-size: 24px;
+    font-weight: 800;
+    font-family: 'Fredoka One', 'Nunito', sans-serif;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 10px rgba(102,126,234,0.5);
+    flex: 1;
+    text-align: left;
+}
+
+/* Bouton musique — dans le header à côté de "Se connecter en prof" */
+.music-btn {
+    padding: 7px 12px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    transition: all 0.3s;
+    white-space: nowrap;
+    backdrop-filter: blur(6px);
+}
+.music-btn:hover {
+    background: rgba(255,255,255,0.2);
+    transform: scale(1.05);
+}
+.music-btn.playing {
+    background: rgba(102,126,234,0.35);
+    border-color: rgba(102,126,234,0.8);
+    box-shadow: 0 0 12px rgba(102,126,234,0.5);
+}
+
+.login-btn {
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 12px;
+    font-family: 'Nunito', sans-serif;
+    transition: transform 0.3s, box-shadow 0.3s;
+    white-space: nowrap;
+}
+.login-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.3); }
+
+.back-btn {
+    padding: 8px 14px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 13px;
+    font-family: 'Nunito', sans-serif;
+    transition: all 0.3s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.back-btn:hover { background: rgba(255,255,255,0.25); transform: translateY(-2px); }
+
+/* ========================
+   CONTENU PRINCIPAL
+   ======================== */
+.main-content { padding: 50px 40px 130px; }
+.welcome-section { text-align: center; }
+.welcome-section h2 {
+    color: white;
+    font-size: 28px;
+    margin-bottom: 36px;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+    font-weight: 800;
+}
+.category-title {
+    color: white;
+    font-size: 22px;
+    margin-bottom: 22px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    font-weight: 700;
+}
+.page { min-height: 100vh; display: none; }
+
+/* ========================
+   GRILLES
+   ======================== */
+.classes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+    max-width: 950px;
+    margin: 0 auto;
+}
+.subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 24px;
+    max-width: 950px;
+    margin: 0 auto;
+}
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 32px;
+    max-width: 750px;
+    margin: 0 auto;
+}
+.quizzes-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+.revision-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+/* ========================
+   CARDS
+   ======================== */
+.class-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px 25px;
+    border-radius: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    position: relative; overflow: hidden;
+}
+.class-card::before {
+    content: '';
+    position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+.class-card:hover::before { left: 100%; }
+.class-card:hover { transform: translateY(-8px); box-shadow: 0 18px 40px rgba(0,0,0,0.35); }
+.class-card h3 { font-size: 28px; margin-bottom: 8px; font-family: 'Fredoka One', sans-serif; }
+.class-card p  { font-size: 14px; opacity: 0.9; font-weight: 600; }
+
+.subject-card {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    padding: 30px 25px;
+    border-radius: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    position: relative; overflow: hidden;
+}
+.subject-card::before {
+    content: '';
+    position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+.subject-card:hover::before { left: 100%; }
+.subject-card:hover { transform: translateY(-8px); box-shadow: 0 18px 40px rgba(0,0,0,0.35); }
+.subject-card h3 { font-size: 22px; margin-bottom: 8px; font-family: 'Fredoka One', sans-serif; }
+.subject-card p  { font-size: 13px; opacity: 0.9; font-weight: 600; }
+
+.subject-delete-btn {
+    position: absolute; top: 8px; right: 8px;
+    background: rgba(0,0,0,0.4); color: white;
+    border: none; border-radius: 50%;
+    width: 30px; height: 30px; cursor: pointer; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s; z-index: 10;
+}
+.subject-delete-btn:hover { background: rgba(200,0,0,0.7); transform: scale(1.1); }
+
+.content-card {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    padding: 40px 30px;
+    border-radius: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    position: relative; overflow: hidden;
+}
+.content-card::before {
+    content: '';
+    position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+.content-card:hover::before { left: 100%; }
+.content-card:hover { transform: translateY(-8px); box-shadow: 0 18px 40px rgba(0,0,0,0.35); }
+.content-card h3 { font-size: 24px; margin-bottom: 12px; font-family: 'Fredoka One', sans-serif; }
+.content-card p  { font-size: 14px; opacity: 0.9; margin-bottom: 20px; font-weight: 600; }
+.continue-btn {
+    background: rgba(255,255,255,0.2);
+    color: white; border: 2px solid white;
+    padding: 10px 20px; border-radius: 25px;
+    cursor: pointer; font-weight: 700; font-size: 14px;
+    font-family: 'Nunito', sans-serif; transition: all 0.3s;
+}
+.continue-btn:hover { background: white; color: #4facfe; }
+
+.quiz-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white; padding: 30px; border-radius: 18px;
+    text-align: center; cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    position: relative; overflow: hidden;
+    min-height: 130px; display: flex; flex-direction: column; justify-content: center;
+}
+.quiz-card::before {
+    content: '';
+    position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+.quiz-card:hover::before { left: 100%; }
+.quiz-card:hover { transform: translateY(-6px); box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+.quiz-card h3 { font-size: 18px; margin-bottom: 8px; font-family: 'Fredoka One', sans-serif; }
+.quiz-card p  { font-size: 13px; opacity: 0.9; font-weight: 600; }
+.quiz-card-delete {
+    position: absolute; top: 8px; right: 8px;
+    background: rgba(245,87,108,0.9); color: white;
+    border: none; border-radius: 50%;
+    width: 30px; height: 30px; cursor: pointer; font-size: 14px;
+    display: none; align-items: center; justify-content: center;
+    transition: all 0.3s; z-index: 10;
+}
+.quiz-card-delete:hover { background: #e73f52; transform: scale(1.1); }
+.quiz-card.prof-mode .quiz-card-delete { display: flex; }
+
+.revision-sheet-card {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    color: white; padding: 26px; border-radius: 18px;
+    text-align: center; position: relative;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.revision-sheet-card:hover { transform: translateY(-5px); box-shadow: 0 14px 30px rgba(0,0,0,0.3); }
+.revision-sheet-card h3 { font-size: 17px; margin-bottom: 8px; font-family: 'Fredoka One', sans-serif; }
+.revision-sheet-card p  { font-size: 12px; opacity: 0.9; margin-bottom: 14px; font-weight: 600; }
+.revision-card-delete {
+    position: absolute; top: 8px; right: 8px;
+    background: rgba(245,87,108,0.9); color: white;
+    border: none; border-radius: 50%;
+    width: 30px; height: 30px; cursor: pointer; font-size: 14px;
+    display: flex; align-items: center; justify-content: center; transition: all 0.3s;
+}
+.revision-card-delete:hover { background: #e73f52; transform: scale(1.1); }
+.download-btn {
+    background: rgba(255,255,255,0.2); color: white;
+    border: 2px solid white; padding: 8px 18px; border-radius: 20px;
+    cursor: pointer; font-weight: 700; font-size: 13px;
+    font-family: 'Nunito', sans-serif; transition: all 0.3s;
+}
+.download-btn:hover { background: white; color: #43e97b; }
+
+/* ========================
+   BOUTONS FLOTTANTS
+   ======================== */
+.float-btn {
+    position: fixed; right: 28px;
+    width: 52px; height: 52px;
+    border-radius: 50%; border: none;
+    cursor: pointer; font-size: 22px; font-weight: bold;
+    transition: all 0.3s;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.35);
+    z-index: 1000; color: white;
+    display: flex; align-items: center; justify-content: center;
+}
+.create-quiz-btn      { bottom: 28px;  background: linear-gradient(135deg,#667eea,#764ba2); font-size: 28px; }
+.create-revision-btn  { bottom: 92px;  background: linear-gradient(135deg,#43e97b,#38f9d7); }
+.create-subject-btn   { bottom: 156px; background: linear-gradient(135deg,#f093fb,#f5576c); }
+.manage-passwords-btn { bottom: 220px; background: linear-gradient(135deg,#4facfe,#00f2fe); font-size: 16px; }
+.float-btn:hover { transform: scale(1.12); box-shadow: 0 10px 28px rgba(0,0,0,0.4); }
+
+/* ========================
+   MODALS
+   ======================== */
+.modal {
+    display: none; position: fixed; z-index: 2000;
+    inset: 0; background: rgba(0,0,0,0.6);
+    align-items: center; justify-content: center;
+    animation: fadeIn 0.2s;
+}
+.modal.show { display: flex; }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+.modal-content {
+    background: white; padding: 30px; border-radius: 18px;
+    box-shadow: 0 10px 50px rgba(0,0,0,0.4);
+    max-width: 500px; width: 90%;
+    max-height: 90vh; overflow-y: auto;
+    animation: slideIn 0.25s;
+}
+.quiz-creation-content { max-width: 700px; }
+.quiz-play-content     { max-width: 750px; }
+@keyframes slideIn {
+    from { transform: translateY(-30px); opacity: 0; }
+    to   { transform: translateY(0);     opacity: 1; }
+}
+
+.modal h2 { color: #667eea; margin-bottom: 20px; font-size: 20px; font-family: 'Fredoka One', sans-serif; }
+.close { float: right; font-size: 26px; color: #aaa; cursor: pointer; font-weight: bold; transition: color 0.2s; }
+.close:hover { color: #333; }
+
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 5px; color: #333; font-weight: 700; font-size: 13px; }
+.form-group input,
+.form-group select {
+    width: 100%; padding: 10px;
+    border: 2px solid #e0e0e0; border-radius: 8px;
+    font-size: 14px; font-family: 'Nunito', sans-serif;
+    transition: border-color 0.3s;
+}
+.form-group input:focus,
+.form-group select:focus { outline: none; border-color: #667eea; }
+
+.btn-submit, .btn-add-question, .btn-next {
+    width: 100%; padding: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white; border: none; border-radius: 8px;
+    cursor: pointer; font-weight: 700; font-size: 14px;
+    font-family: 'Nunito', sans-serif; margin-top: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-submit:hover, .btn-add-question:hover, .btn-next:hover {
+    transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+}
+.btn-cancel {
+    width: 100%; padding: 12px; background: #999; color: white;
+    border: none; border-radius: 8px; cursor: pointer;
+    font-weight: 700; font-size: 14px; font-family: 'Nunito', sans-serif;
+    margin-top: 10px; transition: all 0.2s;
+}
+.btn-cancel:hover { background: #777; transform: translateY(-2px); }
+.btn-delete {
+    width: 100%; padding: 12px; background: #f5576c; color: white;
+    border: none; border-radius: 8px; cursor: pointer;
+    font-weight: 700; font-size: 14px; font-family: 'Nunito', sans-serif;
+    margin-top: 10px; transition: all 0.2s;
+}
+.btn-delete:hover { background: #e73f52; transform: translateY(-2px); }
+
+.quiz-creation-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+.quiz-creation-buttons .btn-submit,
+.quiz-creation-buttons .btn-cancel { margin-top: 0; }
+.modal-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+.modal-buttons button { padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; font-family: 'Nunito', sans-serif; }
+
+.error-message { color: #f5576c; margin-top: 10px; font-size: 14px; display: none; }
+.error-message.show { display: block; }
+
+/* Questions */
+.question-box { background: #f5f5f5; padding: 18px; border-radius: 12px; margin-bottom: 16px; }
+.question-box h4 { margin-bottom: 12px; }
+.question-number { color: #667eea; font-weight: 800; font-size: 14px; }
+.answers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.answer-input, .correct-answer-select {
+    padding: 8px; border: 2px solid #e0e0e0; border-radius: 5px;
+    font-size: 13px; font-family: 'Nunito', sans-serif; width: 100%;
+}
+.answer-input:focus, .correct-answer-select:focus { outline: none; border-color: #667eea; }
+.correct-answer-select { margin-bottom: 10px; }
+.btn-remove-question {
+    background: #f5576c; padding: 7px 12px; color: white;
+    border: none; border-radius: 5px; cursor: pointer;
+    font-size: 12px; font-family: 'Nunito', sans-serif;
+    margin-top: 5px; transition: background 0.3s;
+}
+.btn-remove-question:hover { background: #e73f52; }
+
+/* Quiz play */
+#questionContainer h3 { color: #667eea; margin-bottom: 16px; font-size: 16px; line-height: 1.5; font-weight: 700; }
+.answers-options { display: grid; gap: 10px; margin-bottom: 20px; }
+.answer-option {
+    padding: 13px; border: 2px solid #e0e0e0; border-radius: 10px;
+    cursor: pointer; transition: all 0.3s; background: white;
+    font-size: 14px; font-family: 'Nunito', sans-serif; font-weight: 600;
+}
+.answer-option:hover   { border-color: #667eea; background: #f0f4ff; }
+.answer-option.selected { border-color: #667eea; background: #667eea; color: white; }
+.quiz-progress { margin-bottom: 16px; }
+.progress-bar { width: 100%; height: 8px; background: #e0e0e0; border-radius: 10px; overflow: hidden; margin-top: 6px; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); transition: width 0.4s; }
+#questionCount { color: #666; font-size: 13px; font-weight: 600; }
+
+/* Résultats */
+.results-content { text-align: center; }
+.score { font-size: 34px; color: #667eea; margin-bottom: 20px; font-weight: 800; line-height: 1.5; font-family: 'Fredoka One', sans-serif; }
+
+/* Mots de passe */
+#passwordsList { margin-bottom: 15px; }
+.password-item {
+    background: #f5f5f5; padding: 12px 15px; border-radius: 10px; margin-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.password-item-text { font-family: monospace; color: #333; }
+.password-item-delete {
+    background: #f5576c; color: white;
+    border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer;
+    font-size: 12px; font-family: 'Nunito', sans-serif;
+}
+.password-item-delete:hover { background: #e73f52; }
+
+/* ========================
+   RESPONSIVE
+   ======================== */
+@media (max-width: 768px) {
+    .header { padding: 10px 16px; flex-wrap: wrap; gap: 8px; }
+    .title  { font-size: 17px; order: 1; width: 100%; text-align: left; }
+    .back-btn { order: 0; }
+    .header-right { order: 2; margin-left: auto; }
+    .music-btn { font-size: 14px; padding: 6px 10px; }
+    .login-btn { font-size: 11px; padding: 7px 12px; }
+    .main-content { padding: 20px 14px 130px; }
+    .classes-grid, .subjects-grid, .quizzes-container, .revision-container { grid-template-columns: 1fr; gap: 14px; }
+    .content-grid { grid-template-columns: 1fr; gap: 18px; }
+    .answers-grid { grid-template-columns: 1fr; }
+    .quiz-creation-buttons, .modal-buttons { grid-template-columns: 1fr; }
+    .float-btn { right: 12px; width: 46px; height: 46px; font-size: 18px; }
+    .create-quiz-btn      { bottom: 12px; }
+    .create-revision-btn  { bottom: 68px; }
+    .create-subject-btn   { bottom: 124px; }
+    .manage-passwords-btn { bottom: 180px; }
+}
